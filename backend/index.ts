@@ -5,7 +5,7 @@ import cors from "cors";
 import authRoutes from "./routes/auth";
 import todoRoutes from "./routes/auth";
 const PORT = process.env.PORT;
-const mongooseConnection = process.env.MONGO_URL;
+const mongooseConnection: any = process.env.MONGO_URL;
 
 const app = express();
 app.use(cors());

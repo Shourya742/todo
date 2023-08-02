@@ -1,26 +1,26 @@
 import express from "express";
 import { authenticateJwt } from "../middleware";
 import { Todo } from "../db";
-import router from "express";
+const router = express.Router();
 
 router.post("/todos", authenticateJwt, async (req, res) => {
   const { title, description } = req.body;
   const done = false;
-  const userId = req.userId;
+  const userId = req.headers["userId"];
   const newTodo = new Todo({ title, description, done, userId });
   await newTodo.save();
   res.status(201).json(newTodo);
 });
 
 router.get("/todos", authenticateJwt, async (req, res) => {
-  const userId = req.userId;
+  const userId = req.headers["userId"];
   const todos = await Todo.find({ userId });
   res.json(todos);
 });
 
 router.patch("/todos/:todoId/done", authenticateJwt, (req, res) => {
   const { todoId } = req.params;
-  const userId = req.userId;
+  const userId = req.headers["userId"];
   Todo.findOneAndUpdate({ _id: todoId, userId }, { done: true }, { new: true })
     .then((updatedTodo) => {
       if (!updatedTodo) {
